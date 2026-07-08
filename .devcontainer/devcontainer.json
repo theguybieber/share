@@ -1,0 +1,54 @@
+{
+  "name": "share - AI Stacks",
+  "build": {
+    "dockerfile": "Dockerfile",
+    "context": "."
+  },
+  "workspaceFolder": "/workspace",
+  "forwardPorts": [4000, 11434],
+  "mounts": [
+    "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached"
+  ],
+  "remoteUser": "root",
+  "runArgs": [
+    "--network=ais-network",
+    "--env-file",
+    "${localWorkspaceFolder}/.env"
+  ],
+  "containerEnv": {
+    "LITELLM_BASE_URL": "http://ais-litellm:4000",
+    "LITELLM_ENDPOINT": "http://ais-litellm:4000",
+    "ANTHROPIC_BASE_URL": "http://ais-litellm:4000",
+    "ANTHROPIC_API_BASE_URL": "http://ais-litellm:4000/v1",
+    "ANTHROPIC_API_KEY": "${localEnv:LITELLM_MASTER_KEY}",
+    "ANTHROPIC_AUTH_TOKEN": "${localEnv:LITELLM_MASTER_KEY}",
+    "OPENAI_API_KEY": "${localEnv:LITELLM_MASTER_KEY}",
+    "OPENAI_API_BASE_URL": "http://ais-litellm:4000/v1",
+    "OLLAMA_HOST": "http://ais-ollama:11434",
+    "GITHUB_COPILOT_TOKEN": "${localEnv:GITHUB_COPILOT_TOKEN}"
+  },
+  "postCreateCommand": "bash -c 'npm install -g @anthropic-ai/claude-code claude-flow 2>/dev/null || true && echo \"alias dsp=\\\"claude --dangerously-skip-permissions\\\"\" >> ~/.bashrc && echo \"alias dsp=\\\"claude --dangerously-skip-permissions\\\"\" >> ~/.zshrc && claude-flow init 2>/dev/null || true && echo \"✓ Claude Code, Claude-Flow installed and dsp alias configured\"'",
+  "features": {
+    "ghcr.io/devcontainers/features/git:1": {},
+    "ghcr.io/devcontainers/features/github-cli:1": {},
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "lts"
+    }
+  },
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "terminal.integrated.shell.linux": "/bin/bash",
+        "editor.formatOnSave": true,
+        "files.autoSave": "afterDelay",
+        "files.autoSaveDelay": 1000
+      },
+      "extensions": [
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-azuretools.vscode-docker",
+        "eamodio.gitlens"
+      ]
+    }
+  }
+}

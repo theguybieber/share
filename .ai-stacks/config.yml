@@ -1,0 +1,4 @@
+agent_type: claude-code
+skills: []
+env_vars: []
+mounts: []
